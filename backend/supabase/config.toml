@@ -1,0 +1,27 @@
+project_id = "fika-marketplace"
+
+[api]
+port = 54321
+schemas = ["public", "graphql_public"]
+extra_search_path = ["public"]
+max_rows = 1000
+
+[db]
+port = 54322
+shadow_port = 54320
+
+[auth]
+enabled = true
+site_url = "http://localhost:3000"
+additional_redirect_urls = ["http://localhost:3000/auth/callback"]
+jwt_expiry = 3600
+enable_signup = true
+enable_anonymous_sign_in = false
+
+[storage]
+enabled = true
+file_size_limit = "50MB"
+
+[studio]
+enabled = true
+port = 54323

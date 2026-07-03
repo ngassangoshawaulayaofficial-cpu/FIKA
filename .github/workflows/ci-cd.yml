@@ -1,0 +1,75 @@
+name: FIKA CI/CD Pipeline
+
+on:
+  push:
+    branches: [ main, develop ]
+  pull_request:
+    branches: [ main, develop ]
+
+jobs:
+  lint-and-test:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+          cache-dependency-path: |
+            apps/web-landing/package-lock.json
+            apps/admin-dashboard/package-lock.json
+
+      - name: Install Next.js Web Landing Dependencies
+        run: |
+          cd apps/web-landing
+          npm ci --skip-install
+
+      - name: Check Next.js Build
+        run: |
+          cd apps/web-landing
+          npm run build --if-present
+
+      - name: Install React Admin Dashboard Dependencies
+        run: |
+          cd apps/admin-dashboard
+          npm ci --skip-install
+
+      - name: Check React Admin Build
+        run: |
+          cd apps/admin-dashboard
+          npm run build --if-present
+
+  deploy-backend:
+    needs: lint-and-test
+    if: github.ref == 'refs/heads/main' && github.event_name == 'push'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      - name: Setup Supabase CLI
+        uses: supabase/setup-cli@v1
+        with:
+          version: latest
+
+      - name: Deploy Supabase Migrations
+        run: |
+          supabase db push --db-url "${{ secrets.SUPABASE_DB_URL }}"
+        env:
+          SUPABASE_ACCESS_TOKEN: ${{ secrets.SUPABASE_ACCESS_TOKEN }}
+
+  deploy-frontends:
+    needs: lint-and-test
+    if: github.ref == 'refs/heads/main' && github.event_name == 'push'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      - name: Deploy Web Landing to Netlify
+        run: |
+          echo "Deploying to Netlify..."
+        # Integrate Netlify deployment action or CLI trigger
