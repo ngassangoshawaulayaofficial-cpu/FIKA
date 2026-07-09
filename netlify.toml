@@ -1,0 +1,13 @@
+# FIKA Marketplace — Netlify configuration for apps/web-landing (Next.js 16)
+# Weka faili hii kwenye ROOT ya repo (sio ndani ya apps/web-landing)
+
+[build]
+  base = "apps/web-landing"
+  command = "npm run build"
+  publish = ".next"
+
+[[plugins]]
+  package = "@netlify/plugin-nextjs"
+
+[build.environment]
+  NODE_VERSION = "20"
