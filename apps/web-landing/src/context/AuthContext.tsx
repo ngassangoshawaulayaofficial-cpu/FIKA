@@ -40,6 +40,10 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
   const signOut = async () => {
     await supabase.auth.signOut();
+    // Clear the cookies that Next.js middleware checks for route protection
+    document.cookie = 'sb-access-token=; path=/; max-age=0';
+    document.cookie = 'sb-refresh-token=; path=/; max-age=0';
+    window.location.href = '/';
   };
 
   return (
