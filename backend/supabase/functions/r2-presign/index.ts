@@ -1,7 +1,6 @@
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts"
-import { S3Client } from "https://deno.land/x/aws_sdk@v3.32.0.0/client-s3/mod.ts"
-import { getSignedUrl } from "https://deno.land/x/aws_sdk@v3.32.0.0/s3-request-presigner/mod.ts"
-import { PutObjectCommand } from "https://deno.land/x/aws_sdk@v3.32.0.0/client-s3/mod.ts"
+import { S3Client, PutObjectCommand } from "npm:@aws-sdk/client-s3@3.552.0"
+import { getSignedUrl } from "npm:@aws-sdk/s3-request-presigner@3.552.0"
 
 const r2AccountId = Deno.env.get('R2_ACCOUNT_ID') ?? ''
 const r2AccessKeyId = Deno.env.get('R2_ACCESS_KEY_ID') ?? ''
